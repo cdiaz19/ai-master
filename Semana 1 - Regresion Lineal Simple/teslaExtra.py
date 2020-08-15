@@ -53,41 +53,65 @@ plt.show()
 # Para desplegar el grafico y el modelo Utilize Plotly no utilize matplotlib.
 
 # 1. Estimacion de Coeficientes 
-XKm = np.array(X)
-peY = np.array(y)
-km = XKm[:, np.newaxis]
-percentage = peY
+x_ = np.array(X).reshape(-1,1)
+y_ = np.array(y).reshape(-1,1)
 
-# # separacion de test de entrenamiento y test de prueba.
-km_train, km_test, percentage_train, percentage_test = train_test_split(km, percentage, test_size=0.20, random_state=42)
-
-# 2. Estimacion del MSE
-x = km_train
-y = percentage_train.reshape(-1,1)
-
-model = LinearRegression().fit(x, y)
+model = LinearRegression().fit(x_, y_)
 
 b_1 = model.coef_[0]
 b_0 = model.intercept_
-rss = np.sum((y - b_0 - b_1 * x)**2)
 
-print("b0:",b_0, "b1:", b_1, "rss:", rss)
+print("b0:",b_0, "b1:", b_1)
 
-y_prima = model.predict(km_train)
+# 2. Estimacion del MSE
+y_prima = model.predict(x_)
 
-mse = mean_squared_error(km_train.reshape(-1,1), y_prima)
-print("MSE:",mse)
+mse = mean_squared_error(y, y_prima)
+print("MSE:", mse)
 
-# 3. Prediccion de f(80,000)
+# 3. Prediccion de f(80000, 140000)
+x1 = 80000
+y1 = model.predict([[x1]])
 
-## <SU CODIGO AQUI>
-
+x2 = 140000
+y2 = model.predict([[x2]])
 
 # 4. Desplegar todos los datos + la prediccion como un punto rojo (2)
-plt.scatter(km_train, percentage_train, marker = ".", s = 60, c = "green")
-plt.xlabel("Kilometraje de la Bateria")
-plt.ylabel("Porcentaje Del Rango Disponible")
+!pip3 install plotly
 
-plt.plot(km_train, y_prima, 'r--', c = "magenta")
+import numpy as np
+import plotly.graph_objects as go
 
-plt.show()
+
+t = np.linspace(0, 10, 100)
+
+fig = go.Figure()
+
+fig.add_trace(go.Scatter(
+    x=X, y=y,
+    name='Datos',
+    mode='markers',
+    marker_color=colors
+))
+
+fig.add_trace(go.Scatter(x=X, y=y_prima.transpose()[0],
+                    mode='lines',
+                    name='Tendencia'))
+
+fig.add_trace(go.Scatter(
+    x=[x1], y=y1[0],
+    name='80k',
+    mode='markers',
+    marker=dict(size=[15],color="green", symbol="star")
+))
+
+fig.add_trace(go.Scatter(
+    x=[x2], y=y2[0],
+    name='140k',
+    mode='markers',
+    marker=dict(size=[15],color="red", symbol="star")
+))
+
+fig.update_layout(yaxis=dict(range=[50,100]), title="Porcentaje Disponible de la Bateria del Tesla Modelo S")
+
+fig.show()
