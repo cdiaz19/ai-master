@@ -1,12 +1,13 @@
 # Parte 1: Training Set
 
 # 1 imports:
-import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt 
 from sklearn.metrics import mean_squared_error
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
 
 data = pd.read_csv("data/precios-casas-1.csv")
 data.head()
