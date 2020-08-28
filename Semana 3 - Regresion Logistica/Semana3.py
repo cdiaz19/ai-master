@@ -64,17 +64,34 @@ plt.scatter((im.shape[0]*p_long)*0.95 + 25, (im.shape[1]*(1-p_lat))*0.8 + 20, c=
 
 # EJERCICIO: Entrenar un modelo de regresión softmax para distinguir la probabilidad de que un punto 
 # esté en cada provincia
-provincias_model = None
+p_x = np.array((p_long, p_lat)).T
+p_y = np.array((c))
+
+provincias_model = LogisticRegression(multi_class='multinomial', max_iter=1000)
+provincias_model.fit(p_x, p_y)
 
 # EJERCICIO (2pt): Función que devuelve un diccionario con la probabilidad de que un punto (longitud, latitud) 
 # se encuentre en una provincia dada, 
-def prob_provincias(long, lat):
-    return None
+def prob_provincias(long, lat): 
+    alajuela, cartago, puntarenas, limon, guanacaste, heredia, sj = provincias_model.predict_proba([[long, lat]])[0]
+
+    dic_provicias = {
+        'ALAJUELA': round(alajuela, 3), 
+        'CARTAGO': round(cartago, 3), 
+        'PUNTARENAS': round(puntarenas, 3), 
+        'LIMON': round(limon, 3),
+        'GUANACASTE': round(guanacaste, 3), 
+        'HEREDIA': round(heredia, 3), 
+        'SAN JOSE': round(sj, 3),
+    }
+
+    return dic_provicias
 
 # EJERCICIO: Función que devuelve la provincia de mayor probabilidad a la que un punto (longitud, latitud)
 # pertenece.
 def cual_provincia(long, lat):
-    return None
+    vec_provincias = prob_provincias(long, lat)
+    return max(vec_provincias, key=lambda key: vec_provincias[key])  
 
 # --- CELDA PARA PROBAR SU MODELO UNA VEZ ESTÉ ENTRENADO --- #
 from scipy.spatial import Delaunay
