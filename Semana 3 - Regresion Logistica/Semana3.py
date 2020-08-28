@@ -65,7 +65,7 @@ plt.scatter((im.shape[0]*p_long)*0.95 + 25, (im.shape[1]*(1-p_lat))*0.8 + 20, c=
 # EJERCICIO: Entrenar un modelo de regresión softmax para distinguir la probabilidad de que un punto 
 # esté en cada provincia
 p_x = np.array((p_long, p_lat)).T
-p_y = np.array((c))
+p_y = np.array((provincias_data.provincias))
 
 provincias_model = LogisticRegression(multi_class='multinomial', max_iter=1000)
 provincias_model.fit(p_x, p_y)
@@ -87,6 +87,12 @@ def prob_provincias(long, lat):
 
     return dic_provicias
 
+def prob_provincias(long, lat):
+    inpx = np.array([[long, lat]])
+    [out] = provincias_model.predict_proba(inpx)
+    le_out = dict(zip(provincias_model.classes_, out))
+    return le_out
+
 # EJERCICIO: Función que devuelve la provincia de mayor probabilidad a la que un punto (longitud, latitud)
 # pertenece.
 def cual_provincia(long, lat):
@@ -104,4 +110,4 @@ samples = np.array([x for x in samples if hull.find_simplex(x) >= 0]).T
 im = plt.imread('data/mapaCR.png')
 implot = plt.imshow(im)
 
-plt.scatter((samples[0]*im.shape[0])*0.95 + 25, ((1.0-samples[1])*im.shape[1])*0.8 + 20, c=le.transform(provincias_model.predict(derp.T)), alpha=0.05)
+plt.scatter((samples[0]*im.shape[0])*0.95 + 25, ((1.0-samples[1])*im.shape[1])*0.8 + 20, c=le.transform(provincias_model.predict(samples.T)), alpha=0.05)
