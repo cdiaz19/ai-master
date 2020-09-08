@@ -26,6 +26,7 @@ from sklearn.metrics import plot_confusion_matrix
 from sklearn.metrics import classification_report
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegressionCV
 
 data = pd.read_csv("data/heart.csv")
 data.head()
@@ -53,17 +54,24 @@ print("Exactitud Promedio:", scores.mean())
 # y accuracy_score. Considere el resultado obtenido e itere sobre todo el notebook hasta sentirse satisfecho con
 # los resultados. 
 
-X = np.array((data.loc[:, ~data.columns.isin(['target'])]))
-y = np.array((data.target))
+# import some data to play with
+data_X = np.array((X))
+data_y = np.array((y))
 class_names = ["Sin padecimiento", "Tiene padecimiento"]
 
 # Split the data into a training set and a test set
-X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+# X_train, X_test, y_train, y_test = train_test_split(data_X, data_y, random_state=0)
 
-#classifier = svm.SVC(kernel='linear', C=0.01).fit(X_train, y_train)
-classifier = LogisticRegression(multi_class='multinomial', max_iter=1000).fit(X_train, y_train)
+classifier = LogisticRegressionCV(max_iter=1000, cv=10, random_state=0).fit(data_X, data_y)
 
 np.set_printoptions(precision=2)
+
+# # # Plot non-normalized confusion matrix
+disp = plot_confusion_matrix(classifier, data_X, data_y,
+                             display_labels=class_names,
+                             cmap=plt.cm.Blues,
+                             normalize=None)
+plt.show()
 
 # Plot non-normalized confusion matrix
 disp = plot_confusion_matrix(classifier, X_test, y_test,
@@ -72,6 +80,6 @@ disp = plot_confusion_matrix(classifier, X_test, y_test,
                              normalize=None)
 plt.show()
 
-y_prima = classifier.predict(X_test)
-print(classification_report(y_test, y_prima, target_names=class_names))
-print("Accurancy_score:", accuracy_score(y_test, y_prima))
+y_prima = classifier.predict(data_X)
+print(classification_report(data_y, y_prima, target_names=class_names))
+print("Accurancy_score:", accuracy_score(data_y, y_prima))

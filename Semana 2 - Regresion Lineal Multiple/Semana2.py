@@ -96,17 +96,6 @@ X = scaler.transform(X)
 data["households_over_population"] = data.households / data.population
 data["bedrooms_per_room"] = data.total_bedrooms / data.total_rooms
 
-# # data = data.drop('ocean_proximity_<1H OCEAN', axis=1)
-# # data = data.drop('ocean_proximity_INLAND', axis=1)
-# # data = data.drop('ocean_proximity_ISLAND', axis=1)
-# # data = data.drop('ocean_proximity_NEAR OCEAN', axis=1)
-# # data = data.drop('ocean_proximity_NEAR BAY', axis=1)
-# data = data.drop('longitude', axis=1)
-# data = data.drop('latitude', axis=1)
-# data = data.drop('housing_median_age', axis=1)
-# data = data.drop('total_bedrooms', axis=1)
-# data = data.drop('total_rooms', axis=1)
-# data = data.drop('median_house_value', axis=1)
 
 ### EJERCICIO: Aplique Escalamiento y Transformaciones
 RX = data.loc[:, ~data.columns.isin(['median_house_value'])]
