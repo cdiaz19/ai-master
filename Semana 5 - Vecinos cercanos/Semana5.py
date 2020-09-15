@@ -56,9 +56,9 @@ y_primas = []
 
 # Probamos
 for val_k in k_a_probar:
-    knn = KNeighborsClassifier(n_neighbors=val_k)
-    y_prima = cross_val_score(knn, X, y, cv=10).mean()
-    y_primas.append(y_prima)    
+    knn = KNeighborsClassifier(n_neighbors=val_k).fit(X, y)
+    y_prima = knn.predict(samples.T)
+    y_primas.append(y_prima) 
 
 ### Utilice esta celda para probar los resultados de sus modelos ###
 # imprima el mapa de costa rica con cada y_prima obtenida en el ejercicio 1.
@@ -66,7 +66,7 @@ for val_prima in y_primas:
     print(val_prima)
     im = plt.imread('data/mapaCR.png')
     implot = plt.imshow(im)
-    plt.scatter((samples[0]*im.shape[0])*0.95 + 25, ((1.0-samples[1])*im.shape[1])*0.8 + 20,c=le.transform(np.array((val_prima)).reshape(1,-1)), alpha=0.1)
+    plt.scatter((samples[0]*im.shape[0])*0.95 + 25, ((1.0-samples[1])*im.shape[1])*0.8 + 20,c=le.transform(val_y_prima), alpha=0.1)
     plt.title("k=#" +  str(k_a_probar.pop(0)))
     plt.show()
 
@@ -108,7 +108,6 @@ plt.scatter(wave_x_reduced_train[0], wave_x_reduced_train[1], c=['red' if x==0 e
 X = wave_x_reduced_train.T
 y = wave_y_train
 
-# Creamos el objeto knn donde definimos el valor de k=5
 knn = KNeighborsClassifier(n_neighbors=10).fit(X, y)
 
 # imprimir el accuracy
