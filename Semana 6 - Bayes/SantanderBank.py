@@ -112,6 +112,14 @@ accuracy_score(y_train, y_predict_train)
 # Display Plot non-normalized confusion matrix
 create_confusion_matrix(gauss_nb, X_train, y_train)
 
+## Submission
+# Loading data_test
+data_test
+
+# Set Variables
+X = data_test.iloc[:, 1:]
+y = data_test.ID_code 
+
 ## Naive Bayes
 gauss_nb = GaussianNB()
 y_prima_gauss_nb = gauss_nb.fit(X, y)
@@ -119,5 +127,5 @@ y_predict = gauss_nb.predict(X)
 
 # Save information in Kaggle
 
-kaggle_data = pd.DataFrame({ 'ID_CODE': code, 'Target': y_predict })
+kaggle_data = pd.DataFrame({ 'ID_CODE': y, 'Target': y_predict })
 kaggle_data.to_csv('nb_subset.csv', index=False)
